@@ -1,5 +1,5 @@
 > [!CAUTION]
-> This Rust crate is potentially dangerous so there is a chance it will cause harm to you or your computer. Run at you own risk (ideally in a sandbox).
+> This Rust crate is potentially dangerous and may cause harm to you or your computer. Run at you own risk.
 
 # ai bindgen
 
@@ -43,7 +43,7 @@ fn main() {
 }
 ```
 
-(Refer to the [`parameters.rs`](examples/parameters.rs) example for a list of supported parameters)
+Check out the [`parameters.rs`](examples/parameters.rs) example for an enumeration of all the supported parameters.
 
 > [!TIP]
 > You can run `cargo expand` to get an idea of what the compiler will generate. This is what it came up with for me when I ran it last time:
