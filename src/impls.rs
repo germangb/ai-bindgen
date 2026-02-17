@@ -5,6 +5,7 @@ use openai_api_rust::{
 };
 use proc_macro2::TokenStream;
 use quote::quote;
+use std::path::PathBuf;
 use syn::{ForeignItemFn, ItemForeignMod, spanned::Spanned};
 
 impl Transform for ItemForeignMod {
@@ -25,21 +26,32 @@ impl Transform for ItemForeignMod {
 
 impl Transform for ForeignItemFn {
     fn try_transform(self, attr: TokenStream) -> Result<TokenStream, Error> {
+        // load the context
+        let attr = Attributes::new(attr)?;
+        let mut path = PathBuf::from(self.span().file());
+        if let Some(context) = &attr.context {
+            path.pop();
+            path.push(context);
+            path.to_str()
+                .ok_or_else(|| Error::Other(format!("Invalid context path: {}", path.display())))?
+                .to_string();
+        }
+        let context = std::fs::read_to_string(path)?;
+
         let ForeignItemFn {
             attrs, vis, sig, ..
         } = self;
 
         // generate contents
-        let attr = Attributes::new(attr)?;
         let signature = quote!(#(#attrs)* #vis #sig).to_string();
-        let tokens: TokenStream = syn::parse_str(&chat_completion(&attr, &signature)?)?;
+        let tokens: TokenStream = syn::parse_str(&chat_completion(&attr, &signature, &context)?)?;
 
         // ignore warnings because we cant see the code anyway
         Ok(quote!(#(#attrs)* #[allow(warnings)] #vis # sig { #tokens }))
     }
 }
 
-fn chat_completion(attr: &Attributes, signature: &str) -> Result<String, Error> {
+fn chat_completion(attr: &Attributes, signature: &str, context: &str) -> Result<String, Error> {
     // init openai connection
     let credentials = Credentials::from_env()?;
     let openai = OpenAI::new(Auth::new(&credentials.api_key), &credentials.api_url);
@@ -64,7 +76,7 @@ fn chat_completion(attr: &Attributes, signature: &str) -> Result<String, Error> 
         user: None,
         messages: vec![Message {
             role: Role::User,
-            content: make_message(&signature, prompt),
+            content: make_message(&signature, prompt, context),
         }],
     };
 
@@ -77,10 +89,11 @@ fn chat_completion(attr: &Attributes, signature: &str) -> Result<String, Error> 
         .ok_or(Error::Other("Unable to generate rust code".to_string()))
 }
 
-fn make_message(signature: &str, prompt: &str) -> String {
+fn make_message(signature: &str, prompt: &str, context: &str) -> String {
     format!(
         include_str!("prompt.txt"),
         signature = signature,
-        prompt = prompt
+        prompt = prompt,
+        context = context
     )
 }

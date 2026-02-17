@@ -15,6 +15,9 @@ pub enum Error {
     #[error("Environment error: {0}")]
     Env(#[from] std::env::VarError),
 
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+
     #[error("Other error: {0}")]
     Other(String),
 }

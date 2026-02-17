@@ -9,6 +9,8 @@ proc-macro = true
 [dependencies]
 syn = { version = "2.0.104", features = ["full"] }
 quote = "1.0.40"
-proc-macro2 = "1.0.95"
+proc-macro2 = { version = "1.0.95", features = ["span-locations"] }
 thiserror = "2.0.12"
-openai_api_rust = { git = "https://github.com/germangb/openai-api.git", branch = "native-certs-feature", features = ["native-certs"] }
+openai_api_rust = { git = "https://github.com/germangb/openai-api.git", branch = "native-certs-feature", features = [
+    "native-certs",
+] }

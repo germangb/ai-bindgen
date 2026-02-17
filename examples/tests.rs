@@ -1,23 +1,18 @@
-use ai_bindgen::ai;
+//! Tip: Inspect outputs by running `cargo expand --test --example tests`
 
-#[ai]
-extern "C" {
-    #[ai(prompt = "This function computes the max of the two values")]
-    fn magic_max(a: i32, b: i32) -> i32;
+/// computes the max of the given numbers
+fn do_something(a: i32, b: i32) -> i32 {
+    if a > b { b } else { a }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use ai_bindgen::ai;
 
     #[ai]
     extern "C" {
-        #[ai(prompt = "Generate some test cases for the magic_max(a, b) function please.")]
+        #[ai(prompt = "Generate some test case for the magic function above, please")]
         #[test]
-        fn test_ai_max();
+        fn test_cases();
     }
-}
-
-fn main() {
-    println!("magic_max(4, 6) = {}", magic_max(4, 6)); // 6!
 }

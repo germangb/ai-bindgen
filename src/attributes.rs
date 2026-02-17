@@ -11,6 +11,9 @@ pub struct Attributes {
     /// The identifier of the model to use.
     pub model: Option<String>,
 
+    /// Path to file with the context (defaults to the current file).
+    pub context: Option<String>,
+
     /// Temperature parameter
     pub temperature: Option<f32>,
 
@@ -52,6 +55,10 @@ impl Attributes {
             } else if meta.path.is_ident("model") {
                 let lit: LitStr = meta.value()?.parse()?;
                 self.model = Some(lit.value());
+                Ok(())
+            } else if meta.path.is_ident("context") {
+                let lit: LitStr = meta.value()?.parse()?;
+                self.context = Some(lit.value());
                 Ok(())
             } else if meta.path.is_ident("temperature") {
                 let lit: LitFloat = meta.value()?.parse()?;

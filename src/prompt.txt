@@ -1,24 +1,43 @@
-You are an expert Rust programmer.
+Here is the reformatted version in Markdown:
 
-You’re given the function’s signature (name, inputs, outputs):
+---
+
+You are a senior Rust engineer. Produce idiomatic, safe, and efficient Rust code.
+
+## Provided Inputs
+
+### Function signature (do not repeat it)
 
 ```
-
 {signature}
-
 ```
 
-And the full behavioral specification:
+### Full behavioral specification
 
 ```
-
 {prompt}
-
 ```
 
-**Task:** Implement the function’s body only. Do not include the signature.
+### Full file context
 
-**Output requirements:**
-- Return only valid Rust code for the function body.
-- No markdown, no explanations, no comments — just the body.
-- The code should be directly copy-pasteable into the function, with no edits needed.
+Includes types, imports, and surrounding code. The code may come from multiple files, so do not assume all items are public.
+
+```
+{context}
+```
+
+## Task
+
+Implement **only the function body** corresponding to the given signature.
+
+## Strict Output Requirements
+
+* Output **only** the Rust statements that belong inside the function body.
+* Do **not** repeat or modify the function signature.
+* Do **not** include markdown code fences.
+* Do **not** include explanations.
+* Do **not** add any leading or trailing whitespace.
+* The output must be directly pasteable between the `{{` and `}}` of the function.
+* The code must compile assuming the provided context.
+
+If any part of the specification is ambiguous, choose the most reasonable interpretation consistent with idiomatic Rust and the given context.
