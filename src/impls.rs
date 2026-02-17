@@ -31,7 +31,7 @@ impl Transform for ForeignItemFn {
 
         // generate contents
         let attr = Attributes::new(attr)?;
-        let signature = quote!(#sig).to_string();
+        let signature = quote!(#(#attrs)* #vis #sig).to_string();
         let tokens: TokenStream = syn::parse_str(&chat_completion(&attr, &signature)?)?;
 
         // ignore warnings because we cant see the code anyway
