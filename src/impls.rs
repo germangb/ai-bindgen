@@ -32,9 +32,6 @@ impl Transform for ForeignItemFn {
         if let Some(context) = &attr.context {
             path.pop();
             path.push(context);
-            path.to_str()
-                .ok_or_else(|| Error::Other(format!("Invalid context path: {}", path.display())))?
-                .to_string();
         }
         let context = std::fs::read_to_string(path)?;
 
